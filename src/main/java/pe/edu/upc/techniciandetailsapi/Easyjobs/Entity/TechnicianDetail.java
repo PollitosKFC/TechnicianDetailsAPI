@@ -1,5 +1,7 @@
 package pe.edu.upc.techniciandetailsapi.Easyjobs.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,33 +18,33 @@ import javax.persistence.*;
 @Builder
 public class TechnicianDetail {
     @Id
-    @Column(unique = true, length = 200)
+    @Column(unique = true)
     private Long id;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name="presentation",length = 200)
     private String presentation;
 
     @NotNull
-    @Column(unique = true)
+    @Column(name="yearsExperience")
     private Integer yearsExperience;
 
     @NotNull
-    @Column(unique = true)
+    @Column(name = "maritalStatus",length = 200)
     private String maritalStatus;
 
     @NotNull
-    @Column(unique = true)
+    @Column(name = "educationLevel",length = 200)
     private String educationLevel;
 
     @NotNull
-    @Column(unique = true)
+    @Column(name="englishLevel",length = 200)
     private String englishLevel;
 
     @NotNull
-    @Column(unique = true)
+    @Column(name = "nationality",length = 200)
     private String nationality;
-
+    @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JoinColumn(name = "technician_id",unique = true)
     private Technician technician;

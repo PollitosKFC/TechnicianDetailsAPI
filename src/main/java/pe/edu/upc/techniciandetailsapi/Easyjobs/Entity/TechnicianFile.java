@@ -1,5 +1,6 @@
 package pe.edu.upc.techniciandetailsapi.Easyjobs.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name ="tbl_technicianDetail")
+@Table(name ="tbl_technicianFile")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,21 +18,22 @@ import javax.persistence.*;
 public class TechnicianFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true)
     private Long id;
 
-    @Column(unique = true, length = 200)
+    @Column(name = "type", length = 200)
     private String type;
 
-    @Column(unique = true, length = 200)
+    @Column(name = "nameFile", length = 200)
     private String nameFile;
 
-    @Column(unique = true, length = 200)
+    @Column(name = "urlFile", length = 200)
     private String urlFile;
 
-    @Column(unique = true, length = 200)
+    @Column(name = "Active", length = 200)
     private boolean Active;
-
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "technician_id",unique = true)
+    @JoinColumn(name = "technician_id")
     private Technician technician;
 }

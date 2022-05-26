@@ -1,15 +1,20 @@
 package pe.edu.upc.techniciandetailsapi.Easyjobs.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.apache.bcel.generic.RET;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import pe.edu.upc.techniciandetailsapi.Easyjobs.Entity.Technician;
 import pe.edu.upc.techniciandetailsapi.Easyjobs.Entity.TechnicianDetail;
 import pe.edu.upc.techniciandetailsapi.Easyjobs.Entity.TechnicianFile;
+import pe.edu.upc.techniciandetailsapi.Easyjobs.resource.*;
 import pe.edu.upc.techniciandetailsapi.Easyjobs.service.TechnicianDetailService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -21,74 +26,96 @@ public class TechnicianDetailController {
     @Autowired
     private TechnicianDetailService technicianDetailService;
 
-    @PostMapping("/createTechnicianDetail")
-    public ResponseEntity<TechnicianDetail> createTechnicianDetail(@RequestBody TechnicianDetail technicianDetail) {
-        TechnicianDetail technicianDetailCreated = technicianDetailService.createTechnicianDetail(technicianDetail);
-        return ResponseEntity.ok(technicianDetailCreated);
+    @Autowired
+    private ModelMapper modelMapper;
+
+   // @PostMapping("/createTechnicianDetail")
+    //public ResponseEntity<TechnicianDetail> createTechnicianDetail(@RequestBody TechnicianDetail technicianDetail) {
+     //   TechnicianDetail technicianDetailCreated = technicianDetailService.createTechnicianDetail(technicianDetail);
+     //   return ResponseEntity.ok(technicianDetailCreated);
+   // }
+   // @PostMapping("/createTechnicianDetail")
+    //public ResponseEntity<TechnicianDetail> createTechnicianDetail(@RequestBody SaveTechnicianDetailResource resource) {
+       // TechnicianDetail technician = technicianDetailService.createTechnicianDetail(convertToEntity(resource));
+        //return ResponseEntity.ok(technician);
+   //}
+
+    @PostMapping("/createTechnicianDetail/{id}")
+    public TechnicianDetailResource createTechnicianDetail(@RequestBody SaveTechnicianDetailResource resource, @PathVariable Long id) {
+        TechnicianDetail technician = technicianDetailService.createTechnicianDetail(convertToEntityDetail(resource),id);
+        return convertToResourceDetail(technician);
     }
 
-    @PostMapping("/createTechnicianFile")
-    public ResponseEntity<TechnicianFile> createTechnicianFile(@RequestBody TechnicianFile technicianFile) {
-        TechnicianFile technicianFileCreated = technicianDetailService.createTechnicianFile(technicianFile);
-        return ResponseEntity.ok(technicianFileCreated);
+    @PostMapping("/createTechnicianFile/{id}")
+    public TechnicianFileResource createTechnicianFile(@RequestBody SaveTechnicianFileResource technicianFile, @PathVariable Long id) {
+        TechnicianFile technicianFileCreated = technicianDetailService.createTechnicianFile(convertToEntityFile(technicianFile),id);
+        return convertToResourceFile(technicianFileCreated);
     }
 
     @PutMapping("/updateTechnicianDetailById/{id}")
-    public ResponseEntity<TechnicianDetail> updateTechnicianDetailById(@PathVariable Long id, @RequestBody TechnicianDetail technicianDetail) {
-        TechnicianDetail technicianDetailUpdated = technicianDetailService.updateTechnicianDetailById(id, technicianDetail);
-        return ResponseEntity.ok(technicianDetailUpdated);
+    public TechnicianDetailResource updateTechnicianDetailById(@PathVariable Long id, @RequestBody SaveTechnicianDetailResource technicianDetail) {
+        TechnicianDetail technicianDetailUpdated = technicianDetailService.updateTechnicianDetailById(id, convertToEntityDetail(technicianDetail));
+        return convertToResourceDetail(technicianDetailUpdated);
     }
 
     @PutMapping("/updateTechnicianFileByFileIdAndTechnicianId/{id}")
-    public ResponseEntity<TechnicianFile> updateTechnicianFileByFileIdAndTechnicianId(@PathVariable Long id, @RequestBody TechnicianFile technicianFile) {
-        TechnicianFile technicianFileUpdated = technicianDetailService.updateTechnicianFileByFileIdAndTechnicianId(id, technicianFile);
-        return ResponseEntity.ok(technicianFileUpdated);
+    public TechnicianFileResource updateTechnicianFileByFileIdAndTechnicianId(@RequestParam(name = "fileId") Long fileId, @RequestParam(name = "technicianId") Long technicianId ,@RequestBody SaveTechnicianFileResource technicianFile) {
+        TechnicianFile technicianFileUpdated = technicianDetailService.updateTechnicianFileByFileIdAndTechnicianId(technicianId,fileId, convertToEntityFile(technicianFile));
+        return convertToResourceFile(technicianFileUpdated);
     }
 
-    @GetMapping("/technicianDetailByTechnicianId")
-    public ResponseEntity<TechnicianDetail> findTechnicianDetailByTechnicianId(@RequestParam(name = "technicianId",required = false) Long technicianId) {
-        TechnicianDetail technicianDetail = technicianDetailService.findTechnicianDetailById(technicianId);
-        if (technicianDetail == null) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(technicianDetail);
+    @GetMapping("/technicianDetailByTechnicianId/{id}")
+    public TechnicianDetailResource findTechnicianDetailByTechnicianId(@PathVariable Long id) {
+        TechnicianDetail technicianDetail = technicianDetailService.findTechnicianDetailById(id);
+        return convertToResourceDetail(technicianDetail);
     }
+
 
     @GetMapping("/technicianFileByFileIdAndTechnicianId")
-    public ResponseEntity<TechnicianFile> findTechnicianFileByFileIdAndTechnicianId(@RequestParam(name = "fileId",required = false) Long fileId,
-                                                                                     @RequestParam(name = "technicianId",required = false) Long technicianId) {
-        TechnicianFile technicianFile = technicianDetailService.findTechnicianFileByFileIdAndTechnicianId(fileId, technicianId);
+    public TechnicianFileResource findTechnicianFileByFileIdAndTechnicianId(@RequestParam(name = "fileId") Long fileId,
+                                                                                     @RequestParam(name = "technicianId") Long technicianId) {
+        TechnicianFile technicianFile = technicianDetailService.findTechnicianFileByFileIdAndTechnicianId(technicianId,fileId);
         if (technicianFile == null) {
-            return ResponseEntity.noContent().build();
+            return null;
         }
-        return ResponseEntity.ok(technicianFile);
+        return convertToResourceFile(technicianFile);
     }
 
-    @GetMapping("/AlltechnicianFilesByTechnicianId")
-    public ResponseEntity<List<TechnicianFile>> findAllTechnicianFilesByTechnicianId(@RequestParam(name = "technicianId",required = false) Long technicianId) {
+    @GetMapping("/findTechnicianFilesByTechnicianId")
+    public List<TechnicianFileResource> findAllTechnicianFilesByTechnicianId(@RequestParam(name = "technicianId",required = false) Long technicianId) {
         List<TechnicianFile> technicianFiles = technicianDetailService.findAllTechnicianFilesByTechnicianId(technicianId);
         if (technicianFiles == null) {
-            return ResponseEntity.noContent().build();
+            return null;
         }
-        return ResponseEntity.ok(technicianFiles);
+        List<TechnicianFileResource> technicianResourceList =technicianFiles.stream().map(technicianFile -> {
+            return convertToResourceFile(technicianFile);
+        }).collect(Collectors.toList());
+        return technicianResourceList;
     }
 
-    @GetMapping("/technicianDetailById")
-    public ResponseEntity<TechnicianDetail> findTechnicianDetailById(@RequestParam(name = "id",required = false) Long id) {
-        TechnicianDetail technicianDetail = technicianDetailService.findTechnicianDetailById(id);
-        if (technicianDetail == null) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(technicianDetail);
-    }
 
     @DeleteMapping("/technicianFileByFileIdAndTechnicianId")
-    public ResponseEntity<TechnicianFile> deleteTechnicianFileByFileIdAndTechnicianId(@RequestParam(name = "fileId",required = false) Long fileId,
+    public TechnicianFileResource deleteTechnicianFileByFileIdAndTechnicianId(@RequestParam(name = "fileId",required = false) Long fileId,
                                                                                      @RequestParam(name = "technicianId",required = false) Long technicianId) {
-        TechnicianFile technicianFile = technicianDetailService.deleteTechnicianFileByFileIdAndTechnicianId(fileId, technicianId);
+        TechnicianFile technicianFile = technicianDetailService.deleteTechnicianFileByFileIdAndTechnicianId(technicianId, fileId);
         if (technicianFile == null) {
-            return ResponseEntity.noContent().build();
+            return null;
         }
-        return ResponseEntity.ok(technicianFile);
+        return convertToResourceFile(technicianFile);
+    }
+
+    private TechnicianDetail convertToEntityDetail(SaveTechnicianDetailResource resource) {
+        return modelMapper.map(resource, TechnicianDetail.class);
+    }
+
+    private TechnicianFile convertToEntityFile(SaveTechnicianFileResource resource) {
+        return modelMapper.map(resource, TechnicianFile.class);
+    }
+
+    private TechnicianDetailResource convertToResourceDetail(TechnicianDetail entity) {
+        return modelMapper.map(entity, TechnicianDetailResource.class);
+    }
+    private TechnicianFileResource convertToResourceFile(TechnicianFile entity) {
+        return modelMapper.map(entity, TechnicianFileResource.class);
     }
 }

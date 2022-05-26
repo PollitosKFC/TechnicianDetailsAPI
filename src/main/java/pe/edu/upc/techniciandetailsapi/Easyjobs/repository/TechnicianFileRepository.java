@@ -11,8 +11,8 @@ import java.util.List;
 @Qualifier("technicianFileRepository")
 @Repository
 public interface TechnicianFileRepository extends JpaRepository<TechnicianFile, Long> {
-    @Query(value ="SELECT tf FROM TechnicianFile tf WHERE tf.technician.id = ?1")
-    List<TechnicianFile> TechnicianFilesByTechnicianId(Long id);
-    @Query(value ="SELECT tf FROM TechnicianFile tf WHERE tf.technician.id = ?1 and tf.id = ?2")
+    @Query(value ="SELECT tf FROM TechnicianFile tf WHERE tf.technician.id = ?1 and tf.Active = true")
+    List<TechnicianFile> findTechnicianFilesByTechnicianId(Long id);
+    @Query(value ="SELECT tf FROM TechnicianFile tf WHERE tf.technician.id = ?1 and tf.id = ?2 and tf.Active = true")
     TechnicianFile findTechnicianFileByFileIdAndTechnicianId(Long technicianId, Long fileId);
 }

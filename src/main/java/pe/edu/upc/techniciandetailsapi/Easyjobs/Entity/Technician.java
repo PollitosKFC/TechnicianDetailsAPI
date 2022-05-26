@@ -1,9 +1,13 @@
 package pe.edu.upc.techniciandetailsapi.Easyjobs.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,40 +26,42 @@ public class Technician extends User {
     private Long id;
 
     @NotNull
-    @Column(unique = true, length = 40)
+    @Column(name = "phoneNumber",length = 40)
     private Long phoneNumber;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "firstName", length = 200)
     private String firstName;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "lastName",length = 200)
     private String lastName;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "address", length = 200)
     private String address;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "city", length = 200)
     private String city;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "district",length = 200)
     private String district;
 
     @NotNull
-    @Column(unique = true)
+    @Column(name = "verified", length = 200)
     private Boolean verified;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "gender", length = 200)
     private String gender;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "technician",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TechnicianFile> technician_files;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "technician",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TechnicianDetail technician_detail;
 }

@@ -15,41 +15,37 @@ import java.util.Date;
 @NoArgsConstructor
 @SuperBuilder
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "userName",length = 200)
     private String userName;
 
     @NotNull
-    @Column(unique = true, length = 250)
+    @Column(name = "password", length = 250)
     private String password;
 
     @NotNull
-    @Column(unique = true, length = 250)
+    @Column(name = "email", length = 250)
     private String email;
 
     @NotNull
-    @Column(unique = true, length = 50)
+    @Column(name = "type",length = 50)
     private String type;
 
     @NotNull
-    @Column(unique = true, length = 200)
+    @Column(name = "identificationType", length = 200)
     private String identificationType;
 
     @NotNull
-    @Column()
-    private int identificationNumber;
+    @Column(name = "identificationNumber")
+    private Long identificationNumber;
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(unique = true)
+    @Column(name = "registerDate")
     private Date registerDate;
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(unique = true)
+    @Column(name = "updatedDate")
     private Date updatedDate;
 }
