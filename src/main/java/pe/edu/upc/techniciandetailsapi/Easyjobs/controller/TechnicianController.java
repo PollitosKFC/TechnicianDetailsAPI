@@ -2,14 +2,10 @@ package pe.edu.upc.techniciandetailsapi.Easyjobs.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.techniciandetailsapi.Easyjobs.Entity.Technician;
-import pe.edu.upc.techniciandetailsapi.Easyjobs.Entity.TechnicianDetail;
 import pe.edu.upc.techniciandetailsapi.Easyjobs.resource.SaveTechnician;
-import pe.edu.upc.techniciandetailsapi.Easyjobs.resource.SaveTechnicianDetailResource;
-import pe.edu.upc.techniciandetailsapi.Easyjobs.resource.TechnicianDetailResource;
 import pe.edu.upc.techniciandetailsapi.Easyjobs.resource.TechnicianResource;
 import pe.edu.upc.techniciandetailsapi.Easyjobs.service.TechnicianService;
 

@@ -81,17 +81,17 @@ public class TechnicianDetailController {
         return convertToResourceFile(technicianFile);
     }
 
-    @GetMapping("/findTechnicianFilesByTechnicianId")
-    public List<TechnicianFileResource> findAllTechnicianFilesByTechnicianId(@RequestParam(name = "technicianId",required = false) Long technicianId) {
-        List<TechnicianFile> technicianFiles = technicianDetailService.findAllTechnicianFilesByTechnicianId(technicianId);
-        if (technicianFiles == null) {
-            return null;
+        @GetMapping("/findTechnicianFilesByTechnicianId")
+        public List<TechnicianFileResource> findAllTechnicianFilesByTechnicianId(@RequestParam(name = "technicianId",required = false) Long technicianId) {
+            List<TechnicianFile> technicianFiles = technicianDetailService.findAllTechnicianFilesByTechnicianId(technicianId);
+            if (technicianFiles == null) {
+                return null;
+            }
+            List<TechnicianFileResource> technicianResourceList =technicianFiles.stream().map(technicianFile -> {
+                return convertToResourceFile(technicianFile);
+            }).collect(Collectors.toList());
+            return technicianResourceList;
         }
-        List<TechnicianFileResource> technicianResourceList =technicianFiles.stream().map(technicianFile -> {
-            return convertToResourceFile(technicianFile);
-        }).collect(Collectors.toList());
-        return technicianResourceList;
-    }
 
 
     @DeleteMapping("/technicianFileByFileIdAndTechnicianId")
