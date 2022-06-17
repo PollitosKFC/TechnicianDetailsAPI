@@ -84,4 +84,29 @@ public class TechnicianDetailServiceImplTest {
         // Assert
         assertThat(technicianFileResult).isEqualTo(technicianFile);
     }
+
+    @Test
+    @DisplayName("When UpdateTechnicianDetail with valid data then return TechnicianDetail")
+    public void WhenUpdateTechnicianDetailWithValidDataThenReturnTechnicianDetail() {
+        // Arrange
+        Long id = 1L;
+        TechnicianDetail technicianDetail = new TechnicianDetail();
+        technicianDetail.setId(id);
+
+
+        TechnicianDetail technicianDetailUp = new TechnicianDetail();
+        technicianDetailUp.setPresentation("Name");
+        technicianDetailUp.setYearsExperience(null);
+        technicianDetailUp.setMaritalStatus(null);
+        technicianDetailUp.setEducationLevel("status");
+
+        when(technicianDetailRepository.save(technicianDetail)).thenAnswer(invocation -> invocation.getArgument(0));
+        technicianDetailService.updateTechnicianDetailById(id, technicianDetail);
+
+        // Act
+        TechnicianDetail technicianDetailResult = technicianDetailRepository.getById(id);
+
+        // Assert
+        assertThat(technicianDetailResult).isEqualTo(technicianDetailRepository.getById(id));
+    }
 }
