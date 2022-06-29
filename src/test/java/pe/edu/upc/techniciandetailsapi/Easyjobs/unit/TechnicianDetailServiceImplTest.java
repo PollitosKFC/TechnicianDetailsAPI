@@ -109,4 +109,22 @@ public class TechnicianDetailServiceImplTest {
         // Assert
         assertThat(technicianDetailResult).isEqualTo(technicianDetailRepository.getById(id));
     }
+    @Test
+    @DisplayName("When Delete TechnicianDetail With Valid TechnicianDetail")
+    public void WhenDeleteTechnicianDetailWithValidTechnicianDetail() {
+        // Arrange
+        TechnicianDetail technicianDetail = new TechnicianDetail();
+        technicianDetail.setId(1L);
+        technicianDetail.setPresentation("Name");
+        technicianDetail.setYearsExperience(null);
+        technicianDetail.setMaritalStatus(null);
+        technicianDetail.setEducationLevel("status");
+
+        when(technicianDetailRepository.save(technicianDetail)).thenAnswer(invocation -> invocation.getArgument(0));
+        technicianDetailRepository.deleteById(1L);
+        // Act
+        TechnicianDetail technicianDetailResult = null;
+        // Assert
+        assertThat(technicianDetailResult).isEqualTo(technicianDetailRepository.getById(1L));
+    }
 }
